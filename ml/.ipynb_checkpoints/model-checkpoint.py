@@ -10,7 +10,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 import wandb
 
-pipe = make_pipeline(SimpleImputer(), StandardScaler(), LogisticRegression())
+p2_pipe = make_pipeline(SimpleImputer(), StandardScaler(), LogisticRegression())
 
 # Optional: implement hyperparameter tuning.
 def train_model(X_train, y_train):
@@ -29,7 +29,7 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
    # TODO: implement the function
-    pipe.fit(X_train, y_train)
+    p2_pipe.fit(X_train, y_train)
     return 
     pass
 
@@ -71,8 +71,8 @@ def inference(model, X):
         Predictions from the model.
     """
     # TODO: implement the function
-    pipe.predict(X)
-    pipe.predict_proba(X)
+    p2_pipe.predict(X)
+    p2_pipe.predict_proba(X)
     pass
 
 def save_model(model, path):
@@ -86,13 +86,13 @@ def save_model(model, path):
         Path to save pickle file.
     """
     # TODO: implement the function
-    signature = mlflow.models.infer_signature(model, model.predict(model))
+    signature = mlflow.models.infer_signature(X_train, model.predict(X_train))
         
     mlflow.sklearn.save_model(
-        pipe,
+        p2_pipe,
         path = model,
         signature=signature,
-        input_example=model.iloc[:2]
+        input_example=X.iloc[:2]
     )
     pass
 

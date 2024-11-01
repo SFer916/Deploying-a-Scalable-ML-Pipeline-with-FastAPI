@@ -57,7 +57,7 @@ X_test, y_test, _, _ = process_data(
 )
 
 # TODO: use the train_model function to train the model on the training dataset
-model = train_model(X_train, y_train)
+model = model.train_model(train)
 
 # save the model and the encoder
 model_path = os.path.join(project_path, "model", "model.pkl")
@@ -71,7 +71,7 @@ model = load_model(
 ) 
 
 # TODO: use the inference function to run the model inferences on the test dataset.
-preds = inference(X_test, y_test)
+preds = model.inference(test)
 
 # Calculate and print the metrics
 p, r, fb = compute_model_metrics(y_test, preds)
@@ -88,8 +88,8 @@ for col in cat_features:
             # use test, col and slicevalue as part of the input
             test,
             label=col,
-            slice_value=slicevalue,
-            categorical_features=cat_features
+            categorical_features=cat_features,
+            lb=slicevalue
         )
         with open("slice_output.txt", "a") as f:
             print(f"{col}: {slicevalue}, Count: {count:,}", file=f)
