@@ -1,5 +1,4 @@
 import os
-
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
@@ -13,8 +12,8 @@ from ml.model import (
     train_model,
 )
 # TODO: load the cencus.csv data
-project_path = "Your path here"
-data_path = os.path.join(project_path, "data", "census.csv")
+project_path = "data"
+data_path = os.path.join(project_path, "census.csv")
 print(data_path)
 data = pd.read_csv('census.csv')
 
@@ -41,23 +40,21 @@ X_train, y_train, encoder, lb = process_data(
     # use the train dataset 
     # use training=True
     # do not need to pass encoder and lb as input
-    train, 
+    train,
     categorical_features=cat_features,
-    label="salary",
     training=True
     )
 
 X_test, y_test, _, _ = process_data(
     test,
     categorical_features=cat_features,
-    label="salary",
     training=False,
     encoder=encoder,
-    lb=lb,
+    lb=lb
 )
 
 # TODO: use the train_model function to train the model on the training dataset
-model = model.train_model(train)
+model = train_model(X_train, y_train)
 
 # save the model and the encoder
 model_path = os.path.join(project_path, "model", "model.pkl")
@@ -71,7 +68,7 @@ model = load_model(
 ) 
 
 # TODO: use the inference function to run the model inferences on the test dataset.
-preds = model.inference(test)
+preds = inference(X_test, y_test)
 
 # Calculate and print the metrics
 p, r, fb = compute_model_metrics(y_test, preds)
@@ -86,10 +83,11 @@ for col in cat_features:
         p, r, fb = performance_on_categorical_slice(
             # your code here
             # use test, col and slicevalue as part of the input
+            model,
             test,
+            slicevalue,
             label=col,
-            categorical_features=cat_features,
-            lb=slicevalue
+            categorical_features=cat_features
         )
         with open("slice_output.txt", "a") as f:
             print(f"{col}: {slicevalue}, Count: {count:,}", file=f)

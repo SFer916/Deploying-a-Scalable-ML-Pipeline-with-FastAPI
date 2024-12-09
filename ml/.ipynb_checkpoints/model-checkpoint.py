@@ -4,13 +4,20 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 from ml.data import process_data
 # TODO: add necessary import
 from mlflow.models import infer_signature
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.pipeline import Pipeline, make_pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 import wandb
 
-p2_pipe = make_pipeline(SimpleImputer(), StandardScaler(), LogisticRegression())
+pipe = Pipeline(
+    steps=[
+        ("imputer", SimpleImputer()),
+        ("scaler", StandardScaler()),
+        ("model", LogisticRegression)
+    ]
+)
 
 # Optional: implement hyperparameter tuning.
 def train_model(X_train, y_train):
@@ -29,7 +36,7 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
    # TODO: implement the function
-    p2_pipe.fit(X_train, y_train)
+    pipe.fit(X_train, y_train)
     return 
     pass
 
@@ -71,8 +78,8 @@ def inference(model, X):
         Predictions from the model.
     """
     # TODO: implement the function
-    p2_pipe.predict(X)
-    p2_pipe.predict_proba(X)
+    pipe.predict(X)
+    pipe.predict_proba(X)
     pass
 
 def save_model(model, path):
@@ -86,13 +93,13 @@ def save_model(model, path):
         Path to save pickle file.
     """
     # TODO: implement the function
-    signature = mlflow.models.infer_signature(X_train, model.predict(X_train))
+    signature = mlflow.models.infer_signature(X_train, preds)
         
     mlflow.sklearn.save_model(
-        p2_pipe,
+        pipe,
         path = model,
         signature=signature,
-        input_example=X.iloc[:2]
+        input_example=model.iloc[:2]
     )
     pass
 

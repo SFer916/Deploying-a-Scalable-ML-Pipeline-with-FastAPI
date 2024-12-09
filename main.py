@@ -1,6 +1,5 @@
 import os
 
-import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
@@ -26,20 +25,23 @@ class Data(BaseModel):
     hours_per_week: int = Field(..., example=40, alias="hours-per-week")
     native_country: str = Field(..., example="United-States", alias="native-country")
 
-path = None # TODO: enter the path for the saved encoder 
+path = "encoder" # TODO: enter the path for the saved encoder 
 encoder = load_model(path)
 
-path = None # TODO: enter the path for the saved model 
+path = "model" # TODO: enter the path for the saved model 
 model = load_model(path)
 
 # TODO: create a RESTful API using FastAPI
-app = None # your code here
+app = FastAPI() # your code here
 
 # TODO: create a GET on the root giving a welcome message
 @app.get("/")
 async def get_root():
     """ Say hello!"""
     # your code here
+    r = client.get("/")
+    assert r._status_code == 200
+    assert r.json() == {"greeting": "Hello!"}
     pass
 
 
@@ -69,6 +71,8 @@ async def post_inference(data: Data):
         # use data as data input
         # use training = False
         # do not need to pass lb as input
+        data,
+        training = False
     )
-    _inference = None # your code here to predict the result using data_processed
+    _inference = data_processed # your code here to predict the result using data_processed
     return {"result": apply_label(_inference)}
