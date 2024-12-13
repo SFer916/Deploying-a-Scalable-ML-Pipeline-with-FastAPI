@@ -1,5 +1,5 @@
 import os
-
+import pickle
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
